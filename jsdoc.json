@@ -16,7 +16,6 @@
     "recurse": true,
     "encoding": "utf8",
     "readme": "README.md",
-    "package": "package.json",
     "destination": "doc",
     "template": "node_modules/docdash"
   }
