@@ -38,7 +38,7 @@ export function fromObject(data, options) {
   const keys = Object.keys(data).filter(key => contains.every(has => has(key)))
 
   return fromArray(keys.map(key => data[key])).reduce((previous, current) => {
-    let row = {}
+    const row = {}
 
     keys.forEach(function(key, i) {
       row[key] = current[i]
@@ -68,16 +68,15 @@ export function fromObject(data, options) {
 export function fromArray(values) {
   if (Object(values).length >>> 0 === 0) return []
 
-  let size = values.length - 1
-  let results = []
-  let copy = null
+  const size = values.length - 1
+  const results = []
 
   const recursive = (previous, currentIndex) => {
     const first = values[currentIndex]
     const last = currentIndex === size
 
     first.forEach(value => {
-      copy = previous.slice(0).concat(value)
+      const copy = previous.slice(0).concat(value)
       if (last) {
         results.push(copy)
       } else {
@@ -110,7 +109,7 @@ function createIncludesFactory(arr, reverse = false) {
   if (arr.length === 0) return () => true
 
   return function include(valueOrFn) {
-    let result = arr.some(
+    const result = arr.some(
       typeof value === 'function' ? valueOrFn : v => v === valueOrFn
     )
     return reverse ? !result : result

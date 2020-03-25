@@ -6,23 +6,24 @@ describe('test descartes.js', function() {
   it('test fromObject()', function() {
     const data = { color: ['red', 'blue'], size: ['22#'] }
 
-    const result = [
-      { color: 'red', size: '22#' },
-      { color: 'blue', size: '22#' }
-    ]
-    deepStrictEqual(fromObject(data), result, '笛卡儿积数组生成失败')
+    deepStrictEqual(
+      fromObject(data),
+      [
+        { color: 'red', size: '22#' },
+        { color: 'blue', size: '22#' }
+      ],
+      '笛卡儿积数组生成失败'
+    )
 
-    const result1 = [{ color: 'red' }, { color: 'blue' }]
     deepStrictEqual(
       fromObject(data, { includes: ['color'] }),
-      result1,
+      [{ color: 'red' }, { color: 'blue' }],
       '出现冗余字段或处理失败'
     )
 
-    const result2 = [{ color: 'red' }, { color: 'blue' }]
     deepStrictEqual(
       fromObject(data, { excludes: ['size'] }),
-      result2,
+      [{ color: 'red' }, { color: 'blue' }],
       '字段未成功排除'
     )
   })
