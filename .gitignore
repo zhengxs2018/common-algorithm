@@ -1,0 +1,19 @@
+.DS_Store
+
+node_modules
+
+coverage
+reports
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.idea
+.history
+
+doc*
+dist
+
+bundle-analyzer-report.html

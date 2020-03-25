@@ -1,0 +1,77 @@
+{
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false,
+  "grunt.autoDetect": "off",
+  "gulp.autoDetect": "off",
+  "jake.autoDetect": "off",
+  "search.followSymlinks": false,
+  "search.exclude": {
+    "node_modules": true,
+    ".history": true,
+    ".nyc_output": true,
+    "dist/": true,
+    "doc": true,
+    "coverage": true
+  },
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1500,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    ".history": true,
+    ".nyc_output": true,
+    "node_modules": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    ".history": true,
+    ".nyc_output": true,
+    "node_modules": true,
+    "dist": true,
+    "doc": true,
+    "coverage": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "[javascript]":  {
+    "editor.formatOnSave":  false,
+  },
+  "[javascriptreact]":  {
+    "editor.formatOnSave":  false,
+  },
+  "[typescript]":  {
+    "editor.formatOnSave":  false,
+  },
+  "[typescriptreact]":  {
+    "editor.formatOnSave":  false,
+  },
+  "cSpell.ignoreWords": [
+    "preversion",
+    "postversion",
+    "newversion",
+    "gitlab",
+    "cnpm",
+    "zhengxs",
+    "foxmail",
+    "docdash",
+    "buble",
+    "filesize",
+    "recurse",
+    "monospace"
+  ],
+  "cSpell.ignorePaths": [
+    "**/package-lock.json",
+    "**/node_modules/**",
+    "**/vscode-extension/**",
+    "**/.git/**",
+    ".vscode",
+    ".history",
+    ".nyc_output",
+    "coverage",
+    "dist",
+    "doc",
+    "CHANGELOG.md"
+  ]
+}

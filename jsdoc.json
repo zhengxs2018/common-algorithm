@@ -1,0 +1,23 @@
+{
+  "source": {
+    "include": [
+      "src"
+    ]
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  },
+  "tags": {
+    "allowUnknownTags": false
+  },
+  "opts": {
+    "verbose": true,
+    "recurse": true,
+    "encoding": "utf8",
+    "readme": "README.md",
+    "package": "package.json",
+    "destination": "doc",
+    "template": "node_modules/docdash"
+  }
+}
