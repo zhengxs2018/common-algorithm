@@ -24,9 +24,6 @@
  * // [{"color":"red","size":"22#"},{"color":"blue","size":"22#"}]
  */
 export function fromObject(data, options) {
-  // 处理异常数据
-  data = Object(data)
-
   const { includes, excludes, convert = n => n } = options || {}
 
   const contains = [
