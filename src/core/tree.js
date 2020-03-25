@@ -6,7 +6,30 @@
  * @author zhengxs<zhengxs2018@foxmail.com>
  * @license MIT
  */
-import { assert, isNonObject, isNullOrUndefined } from '../lib/utils'
+import { assert, isNonObject, isNullOrUndefined, forEach } from '../lib/utils'
+
+/**
+ * 创建节点
+ *
+ * @private
+ */
+function createNode(parentId, nodeId, originData) {
+  const nodeData = {
+    id: nodeId,
+    parentId: parentId,
+    children: []
+  }
+  return Object.assign(nodeData, originData)
+}
+
+/**
+ * 获取导出的节点
+ *
+ * @private
+ */
+function getExportsNodes(data) {
+  return Array.isArray(data) ? data : []
+}
 
 /**
  * 行数据转树型数据
@@ -15,10 +38,10 @@ import { assert, isNonObject, isNullOrUndefined } from '../lib/utils'
  * @throws {TypeError} rows 非数组就报异常
  *
  * @param {Object[]} rows    行数据
- * @param {Object} options   可选配置
- * @param {String} [options.idKey=id]                     主要字段
- * @param {String} [options.parentKey=parent]             父级的字段
- * @param {Function|String} [options.rootValue=__ROOT__]  顶级值
+ * @param {Object}   options   可选配置
+ * @param {String}   [options.idKey="id"]                     主要字段
+ * @param {String}   [options.parentKey="parent"]             父级的字段
+ * @param {Function|String} [options.rootValue="__ROOT__"]  顶级值
  * @param {Function} options.converter                    节点转换器
  *
  * @returns {Object[]}  树型数据
@@ -34,7 +57,8 @@ import { assert, isNonObject, isNullOrUndefined } from '../lib/utils'
  *  rowToTree(rows)
  * // [{"children":[{"id":1,"parent":0,"name":"level 1-1"},{"id":2,"parent":0,"name":"level 1-2"}],"id":0,"parent":null,"name":"level 1"}]
  */
-export function rowToTree(rows, options) {
+
+export function toTree(rows, options) {
   assert(
     Array.isArray(rows),
     new TypeError(
@@ -118,15 +142,63 @@ export function rowToTree(rows, options) {
   }
 }
 
-function createNode(parentId, nodeId, originData) {
-  const nodeData = {
-    id: nodeId,
-    parentId: parentId,
-    children: []
+/**
+ * 树转行
+ *
+ * @public
+ *
+ * @param {Object[]} data       树形数据
+ * @param {Function} [callback= (current) => current]   回调函数，参数位：current, index, parent, parents, originParent
+ *
+ * @returns {Object[]}  行数据
+ */
+export function toArray(data, callback = v => v) {
+  const recursive = (nodes, parent, parents, originParent) => {
+    return nodes.reduce((previousValue, node, index) => {
+      const { children = [], ...current } = node
+
+      // 处理当前数据
+      const value = callback(current, index, parent, parents, originParent)
+
+      // 跳过当前和子级
+      if (value === false) {
+        return previousValue
+      }
+
+      return previousValue.concat(
+        value,
+        recursive(children, value, parents.concat(node), node)
+      )
+    }, [])
   }
-  return Object.assign(nodeData, originData)
+
+  return recursive(data, null, [], null)
 }
 
-function getExportsNodes(data) {
-  return Array.isArray(data) ? data : []
+/**
+ * 循环树形数据
+ *
+ * @public
+ *
+ * @param {Object[]} data       树形数据
+ * @param {Function} callback   回调函数，参数为：current, index, parent, parents, originParent
+ *
+ * @returns {void}
+ */
+export function each(data, callback) {
+  function recursive(nodes, parent, parents, originParent) {
+    forEach(nodes, (node, i) => {
+      const { children = [], ...current } = node
+
+      /* istanbul ignore next */
+      const result = callback(current, i, parent, parents, originParent)
+
+      if (typeof result === 'boolean') return result
+      if (children.length > 0) {
+        recursive(children, current, parents.concat(node), node)
+      }
+    })
+  }
+
+  recursive(data, null, [], null)
 }

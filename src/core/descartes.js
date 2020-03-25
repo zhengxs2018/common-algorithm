@@ -87,11 +87,6 @@ export function fromArray(values) {
   return results
 }
 
-export default {
-  fromObject,
-  fromArray
-}
-
 /**
  * 创建用于判断数组中是否包含某一个值的函数工程
  *

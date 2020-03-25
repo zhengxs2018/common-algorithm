@@ -1,7 +1,8 @@
-import descartes from './core/descartes'
-import { rowToTree } from './core/tree'
+import * as descartes from './core/descartes'
 
-export { rowToTree, descartes }
+import * as tree from './core/tree'
+
+export { descartes, tree }
 
 export default {
   version: '__VERSION__'
