@@ -1,6 +1,6 @@
 {
   "name": "@zhengxs/common-algorithm",
-  "version": "0.0.1-0",
+  "version": "0.0.1-1",
   "description": "常用算法，支持 nodejs 与浏览器",
   "keywords": [
     "tree",
