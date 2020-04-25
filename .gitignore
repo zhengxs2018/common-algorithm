@@ -17,3 +17,4 @@ doc*
 dist
 
 bundle-analyzer-report.html
+*.tsbuildinfo

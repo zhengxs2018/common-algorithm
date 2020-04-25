@@ -73,5 +73,10 @@
     "dist",
     "doc",
     "CHANGELOG.md"
+  ],
+  "cSpell.words": [
+    "Customizer",
+    "tslib",
+    "typedoc"
   ]
 }

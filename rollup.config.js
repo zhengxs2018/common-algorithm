@@ -7,13 +7,9 @@ import json from '@rollup/plugin-json'
 
 import clear from 'rollup-plugin-clear'
 import progress from 'rollup-plugin-progress'
-import { eslint } from 'rollup-plugin-eslint'
-
+import typescript from 'rollup-plugin-typescript2'
 import externals from 'rollup-plugin-node-externals'
-
-import babel from 'rollup-plugin-babel'
 import { terser } from 'rollup-plugin-terser'
-
 import filesize from 'rollup-plugin-filesize'
 import visualizer from 'rollup-plugin-visualizer'
 
@@ -35,7 +31,7 @@ const banner = `/**
  */`
 
 const config = {
-  input: pkg.module,
+  input: './src/index.ts',
   output: [
     {
       banner,
@@ -50,12 +46,11 @@ const config = {
   },
   plugins: [
     clear({
-      targets: ['dist', 'bundle-analyzer-report.html']
+      targets: ['dist', 'tsconfig.tsbuildinfo']
     }),
     progress({
       clearLine: false
     }),
-    eslint(),
     replace({
       __VERSION__: pkg.version,
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
@@ -65,9 +60,7 @@ const config = {
     }),
     nodeResolver(),
     commonjs(),
-    babel({
-      externalHelpers: true
-    }),
+    typescript(),
     json()
   ],
   watch: {
@@ -80,7 +73,7 @@ if (analyse) {
   config.plugins.push(
     visualizer({
       title: `${pkg.name} - ${pkg.author.name}`,
-      filename: join(__dirname, 'reports/bundle-analyzer-report.html')
+      filename: join(__dirname, 'dist/bundle-analyzer-report.html')
     })
   )
 } else {
@@ -104,6 +97,14 @@ if (analyse) {
   config.output.push({
     file: outputFile,
     ...umdOutputConfig
+  })
+
+  config.output.push({
+    banner,
+    file: pkg.module,
+    format: 'esm',
+    sourcemap: true,
+    exports: 'named'
   })
 }
 
