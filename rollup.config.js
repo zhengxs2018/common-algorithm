@@ -110,7 +110,10 @@ if (analyse) {
 
 if (isProd) {
   // 添加统计插件
-  config.plugins.push(filesize())
+  config.output.forEach(o => {
+    o.plugins = o.plugins || []
+    o.plugins.push(filesize())
+  })
 }
 
 export default config
