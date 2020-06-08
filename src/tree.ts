@@ -19,7 +19,12 @@ export interface Tree {
 export interface TreeOptions {
   idKey: IDKey
   parentKey: IDKey
-  rootValue: IDKey | ((nodes: Record<IDKey, Node[]>) => Tree)
+  rootValue:
+    | IDKey
+    | ((
+        parentNodesList: Record<IDKey, Node[]>,
+        nodesList: Record<IDKey, Node>
+      ) => Tree)
   converter(node: Node): Node | boolean
 }
 
@@ -67,7 +72,7 @@ export function toTree(
     return Object.assign({ id, parentId }, originData)
   }
 
-  const nodes: Record<string | number, Node> = {}
+  const nodesMap: Record<string | number, Node> = {}
   const parentNodes: Record<string | number, Node[]> = {}
 
   forEach(data, item => {
@@ -89,7 +94,7 @@ export function toTree(
     if (typeof node === 'boolean') return node
 
     // 保存节点到列表
-    nodes[id] = node
+    nodesMap[id] = node
 
     // 获取节点列表
     const nodeList = parentNodes[parentId]
@@ -108,7 +113,7 @@ export function toTree(
     }
 
     // 挂载节点
-    const parentNode = nodes[parentId]
+    const parentNode = nodesMap[parentId]
     if (parentNode) {
       const nodeList = parentNode.children || []
       if (nodeList.length === 0) {
@@ -124,7 +129,7 @@ export function toTree(
   const exportsNodes = (data: Tree) => (Array.isArray(data) ? data : [])
 
   if (typeof rootValue === 'function') {
-    return exportsNodes(rootValue(parentNodes))
+    return exportsNodes(rootValue(parentNodes, nodesMap))
   } else {
     return exportsNodes(parentNodes[rootValue ?? '__ROOT__'])
   }
