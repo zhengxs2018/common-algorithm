@@ -10,7 +10,7 @@
   "main": "dist/lib.commonjs.js",
   "browser": "dist/lib.umd.js",
   "module": "dist/lib.esm.js",
-  "type": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "cross-env NODE_ENV=production rollup -c rollup.config.js",
     "watch": "rollup -cw rollup.config.js",
@@ -19,7 +19,7 @@
     "cov": "jest --coverage",
     "ci": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "lint": "prettier --parser=typescript  {src,__tests__}/**/*.[jt]s --write",
-    "commit": "git-cz",
+    "commit": "cz",
     "clean": "rimraf dist tsconfig.tsbuildinfo",
     "canary": "npm version prerelease && npm publish --tag=next",
     "preversion": "npm run lint && npm test",
@@ -45,10 +45,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "node_modules/cz-customizable"
-    },
-    "cz-customizable": {
-      "config": "./cz-config.js"
+      "path": "cz-conventional-changelog"
     }
   },
   "peerDependencies": {
@@ -62,7 +59,9 @@
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.2",
     "@types/power-assert": "^1.5.3",
+    "commitizen": "^4.2.3",
     "cross-env": "^7.0.2",
+    "cz-conventional-changelog": "^3.3.0",
     "husky": "^4.2.3",
     "jest": "^25.4.0",
     "lint-staged": "^10.0.8",
@@ -84,8 +83,7 @@
     "typescript": "^3.8.3"
   },
   "engines": {
-    "node": ">= 10",
-    "npm": ">= 5"
+    "node": ">= 10.x"
   },
   "homepage": "https://github.com/zhengxs2018/common-algorithm#readme",
   "repository": {
