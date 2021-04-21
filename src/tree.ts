@@ -7,8 +7,9 @@ export type IDKey = string | number
 export type TreeData = Record<string | symbol | number, unknown>
 
 export interface Node extends TreeData {
-  id: IDKey
-  parentId: IDKey
+  // id: IDKey
+  // parentId: IDKey
+  __id__: IDKey // 防止 和 内置的 id 存在冲突
   children?: Node[]
 }
 
@@ -25,7 +26,7 @@ export interface TreeOptions {
         parentNodesList: Record<IDKey, Node[]>,
         nodesList: Record<IDKey, Node>
       ) => Tree)
-  converter(node: Node): Node | boolean
+  converter(node: Node): Node | null | undefined | false
 }
 
 /**
@@ -64,14 +65,6 @@ export function toTree(
   const converter = options?.converter || ((node: Node) => node)
   const rootValue = options?.rootValue
 
-  function createNode(
-    parentId: IDKey,
-    id: IDKey,
-    originData: Record<string, any>
-  ): Node {
-    return Object.assign({ id, parentId }, originData)
-  }
-
   const nodesMap: Record<string | number, Node> = {}
   const parentNodes: Record<string | number, Node[]> = {}
 
@@ -88,10 +81,10 @@ export function toTree(
     const parentId = item[parentKey] ?? '__ROOT__'
 
     // 获取原始数据
-    const node = converter(createNode(id, parentId, item))
+    const node = converter({ __id__: id, ...item })
 
     // 允许外部过滤节点
-    if (typeof node === 'boolean') return node
+    if (!node) return true
 
     // 保存节点到列表
     nodesMap[id] = node
@@ -99,7 +92,7 @@ export function toTree(
     // 获取节点列表
     const nodeList = parentNodes[parentId]
     if (nodeList) {
-      if (!nodeList.some(n => n.id === id)) {
+      if (!nodeList.some(n => n['__id__'] === id)) {
         nodeList.push(node)
       }
     } else {
@@ -118,9 +111,7 @@ export function toTree(
       const nodeList = parentNode.children || []
       if (nodeList.length === 0) {
         parentNode.children = [node]
-      } else if (nodeList.some(n => n.id === id)) {
-        // pass
-      } else {
+      } else if (!nodeList.some(n => n['__id__'] === id)) {
         nodeList.push(node)
       }
     }
@@ -163,29 +154,25 @@ export function treeToRows<T extends TreeData, R = T>(
   childrenKey: string,
   customizer: ToRowsCustomizer<T, R>
 ): R[]
-export function treeToRows<T extends TreeData, R = T>(
-  data: T[],
-  ...args:
-    | [string]
-    | [string, ToRowsCustomizer<T, R>]
-    | [ToRowsCustomizer<T, R>]
-): R[] {
+export function treeToRows<T extends TreeData, R = T>(): R[] {
+  const data = arguments[0]
+
   let childrenKey: string
   let customizer: ToRowsCustomizer<T, R>
 
-  if (isFunction(args[0])) {
-    customizer = args[0]
+  if (isFunction(arguments[1])) {
+    customizer = arguments[1]
     childrenKey = 'children'
   } else {
-    childrenKey = args[0] ?? 'children'
+    childrenKey = arguments[1] ?? 'children'
     // @ts-ignore
-    customizer = args[1] ?? (v => v)
+    customizer = arguments[2] ?? (v => v)
   }
 
   const results: R[] = []
 
   eachTree(data, childrenKey, (value, index, nodes, node) => {
-    results.push(customizer(value, index, nodes, node))
+    results.push(customizer(value, index, nodes as T[], node as T))
   })
 
   return results

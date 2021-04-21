@@ -8,29 +8,31 @@ const rows = [
   { id: 2, parentId: 1, name: 'level 1-1' },
   { id: 3, parentId: 1, name: 'level 1-2' }
 ]
-
-const tree = [
-  {
-    id: 1,
-    parentId: null,
-    name: 'level 1',
-    children: [
-      {
-        id: 2,
-        parentId: 1,
-        name: 'level 1-1'
-      },
-      {
-        id: 3,
-        parentId: 1,
-        name: 'level 1-2'
-      }
-    ]
-  }
-]
-
 describe('test tree.js', function() {
   it('test toTree()', function() {
+    const tree = [
+      {
+        id: 1,
+        __id__: 1,
+        parentId: null,
+        name: 'level 1',
+        children: [
+          {
+            id: 2,
+            __id__: 2,
+            parentId: 1,
+            name: 'level 1-1'
+          },
+          {
+            id: 3,
+            __id__: 3,
+            parentId: 1,
+            name: 'level 1-2'
+          }
+        ]
+      }
+    ]
+
     deepStrictEqual(toTree(rows), tree, '行转树形数据失败')
   })
 
@@ -43,11 +45,13 @@ describe('test tree.js', function() {
     const tree = [
       {
         id: 1,
+        __id__: 1,
         parentId: 'root',
         name: 'level 1',
         children: [
           {
             id: 2,
+            __id__: 2,
             parentId: 1,
             name: 'level 1-1'
           }
@@ -66,6 +70,25 @@ describe('test tree.js', function() {
   })
 
   it('test treeToRows()', function() {
+    const tree = [
+      {
+        id: 1,
+        parentId: null,
+        name: 'level 1',
+        children: [
+          {
+            id: 2,
+            parentId: 1,
+            name: 'level 1-1'
+          },
+          {
+            id: 3,
+            parentId: 1,
+            name: 'level 1-2'
+          }
+        ]
+      }
+    ]
     deepStrictEqual(treeToRows(tree), rows, '树转行数据失败')
   })
 
@@ -113,6 +136,25 @@ describe('test tree.js', function() {
   it('test eachTree(false)', function() {
     let rootId = null
 
+    const tree = [
+      {
+        id: 1,
+        parentId: null,
+        name: 'level 1',
+        children: [
+          {
+            id: 2,
+            parentId: 1,
+            name: 'level 1-1'
+          },
+          {
+            id: 3,
+            parentId: 1,
+            name: 'level 1-2'
+          }
+        ]
+      }
+    ]
     eachTree(tree, 'children', value => {
       ok(!hasOwn(value, 'children'), '循环的值未排除 children 字段')
       rootId = value.id
@@ -125,6 +167,25 @@ describe('test tree.js', function() {
   it('test eachTree(true)', function() {
     const children: any[] = []
 
+    const tree = [
+      {
+        id: 1,
+        parentId: null,
+        name: 'level 1',
+        children: [
+          {
+            id: 2,
+            parentId: 1,
+            name: 'level 1-1'
+          },
+          {
+            id: 3,
+            parentId: 1,
+            name: 'level 1-2'
+          }
+        ]
+      }
+    ]
     eachTree(tree, 'children', value => {
       if (value.parentId !== null) return true
       children.push(value)
