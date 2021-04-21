@@ -90,7 +90,7 @@ if (analyse) {
   const ext = extname(outputFile)
   config.output.push({
     file: join(dirname(outputFile), `${basename(outputFile, ext)}.min${ext}`),
-    plugins: [terser()],
+    plugins: [terser(), isProd && filesize()],
     ...umdOutputConfig
   })
 
@@ -105,14 +105,6 @@ if (analyse) {
     format: 'esm',
     sourcemap: true,
     exports: 'named'
-  })
-}
-
-if (isProd) {
-  // 添加统计插件
-  config.output.forEach(o => {
-    o.plugins = o.plugins || []
-    o.plugins.push(filesize())
   })
 }
 
