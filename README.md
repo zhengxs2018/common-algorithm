@@ -5,6 +5,8 @@
 [![npm version](https://badge.fury.io/js/%40zhengxs%2Fcommon-algorithm.svg)](https://www.npmjs.com/package/%40zhengxs%2Fcommon-algorithm)
 [![Downloads](https://img.shields.io/npm/dm/%40zhengxs%2Fcommon-algorithm.svg)](https://www.npmjs.com/package/%40zhengxs%2Fcommon-algorithm)
 
+> 推荐使用 [js.tree](https://github.com/zhengxs2018/js.tree)
+
 常用算法，支持 nodejs 与浏览器，使用 TypeScript 重构
 
 ## 安装
